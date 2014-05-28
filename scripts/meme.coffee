@@ -91,6 +91,7 @@ module.exports = (robot) ->
             text0: t0,
             text1: t1,
             username: user,
+            facebookUID: "",
             password: password
           })
           .get() (err, res, body) ->
