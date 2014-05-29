@@ -53,25 +53,23 @@ imgFlipGen = (msg, id, top, bottom, callback) ->
 
 imgFlipPicList = (msg, callback) ->
 
-    currentid=''
-    currentname=''
-
-    showMeme = (err, res, body ) ->
-        return msg.send err if err
-        if res.statusCode == 301
-              msg.http(res.headers.location).get() showMeme
-              return
-        if res.statusCode > 300
-              msg.reply "Sorry, I couldn't generate that meme. Unexpected status from memecaption.com: #{res.statusCode}"
-              return
-        try
-              result = JSON.parse(body)
-        catch error
-              msg.reply "Sorry, I couldn't generate that meme. Unexpected response from memecaptain.com: #{body}"
-        if result? and result['success']?
-              callback currentid, currentname, result.data.url 
-        else
-              msg.reply "Sorry, I couldn't generate that meme."
+    showMeme = (id, name) ->
+        return (err, res, body ) ->
+            return msg.send err if err
+            if res.statusCode == 301
+                  msg.http(res.headers.location).get() showMeme
+                  return
+            if res.statusCode > 300
+                  msg.reply "Sorry, I couldn't generate that meme. Unexpected status from memecaption.com: #{res.statusCode}"
+                  return
+            try
+                  result = JSON.parse(body)
+            catch error
+                  msg.reply "Sorry, I couldn't generate that meme. Unexpected response from memecaptain.com: #{body}"
+            if result? and result['success']?
+                  callback id, name, result.data.url 
+            else
+                  msg.reply "Sorry, I couldn't generate that meme."
 
     listMemes = (err, res, body) ->
         return msg.send err if err
@@ -93,7 +91,7 @@ imgFlipPicList = (msg, callback) ->
                     text1: " ",
                     username: username,
                     password: password 
-                ).get() showMeme
+                ).get() showMeme(meme.id, meme.name)
         else
             msg.reply "Sorry, I can't understand their answer!" 
 
