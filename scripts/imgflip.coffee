@@ -44,6 +44,7 @@ imgFlip = (msg) ->
         catch error
             msg.reply "Sorry, I can't understand their answer!" 
         if result? 
+            msg.reply "Got something #{result}"
             for meme in result?data?memes
                 msg.reply "#{meme?name}"
         else
