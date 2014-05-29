@@ -29,7 +29,7 @@
 #   bobanj
 
 module.exports = (robot) ->
-    robot.respong /meme list/i, (msg) ->
+    robot.respond /meme list/i, (msg) ->
         imgFlip msg
 
 imgFlip = (msg) ->
