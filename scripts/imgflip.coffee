@@ -30,6 +30,7 @@
 
 module.exports = (robot) ->
     robot.respond /meme list/i, (msg) ->
+        msg.reply "Trying to get list"
         imgFlip msg
 
 imgFlip = (msg) ->
