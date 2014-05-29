@@ -19,8 +19,8 @@ module.exports = (robot) ->
         imgFlipGen msg, msg.match[1], msg.match[2], msg.match[3], (url) ->
             msg.send url
     robot.respond /meme piclist/i, (msg) ->
-        imgFlipPicList msg, (url) -> 
-            msg.send url
+        imgFlipPicList msg, (id, name, url) -> 
+            msg.send "#{id} #{name} #{url}"
     robot.respond /meme list/i, (msg) ->
         imgFlipList msg
         
@@ -53,7 +53,7 @@ imgFlipGen = (msg, id, top, bottom, callback) ->
 
 imgFlipPicList = (msg, callback) ->
 
-    showMeme = (err, res, body) ->
+    showMeme = (err, res, body, id, name) ->
         return msg.send err if err
         if res.statusCode == 301
               msg.http(res.headers.location).get() showMeme
@@ -66,7 +66,7 @@ imgFlipPicList = (msg, callback) ->
         catch error
               msg.reply "Sorry, I couldn't generate that meme. Unexpected response from memecaptain.com: #{body}"
         if result? and result['success']?
-              callback result.data.url
+              callback result.data.url, id, name
         else
               msg.reply "Sorry, I couldn't generate that meme."
 
@@ -88,7 +88,7 @@ imgFlipPicList = (msg, callback) ->
                     text1: " ",
                     username: username,
                     password: password 
-                ).get() showMeme
+                ).get() showMeme, meme.id, meme.name
         else
             msg.reply "Sorry, I can't understand their answer!" 
 
