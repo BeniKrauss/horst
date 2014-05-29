@@ -50,7 +50,7 @@ imgFlipGen = (msg, id, top, bottom, callback) ->
         password: password 
     ).get() processResult
 
-imfFlipPicList = (msg) ->
+imgFlipPicList = (msg) ->
 
     showMeme = (err, res, body) ->
         return msg.send err if err
