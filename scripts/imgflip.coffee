@@ -19,7 +19,8 @@ module.exports = (robot) ->
         imgFlipGen msg, msg.match[1], msg.match[2], msg.match[3], (url) ->
             msg.send url
     robot.respond /meme piclist/i, (msg) ->
-        imgFlipPicList msg
+        imgFlipPicList msg, (url) -> 
+            msg.send url
     robot.respond /meme list/i, (msg) ->
         imgFlipList msg
         
@@ -50,7 +51,7 @@ imgFlipGen = (msg, id, top, bottom, callback) ->
         password: password 
     ).get() processResult
 
-imgFlipPicList = (msg) ->
+imgFlipPicList = (msg, callback) ->
 
     showMeme = (err, res, body) ->
         return msg.send err if err
