@@ -53,7 +53,10 @@ imgFlipGen = (msg, id, top, bottom, callback) ->
 
 imgFlipPicList = (msg, callback) ->
 
-    showMeme = (err, res, body, id, name) ->
+    currentid=''
+    currentname=''
+
+    showMeme = (err, res, body ) ->
         return msg.send err if err
         if res.statusCode == 301
               msg.http(res.headers.location).get() showMeme
@@ -66,7 +69,7 @@ imgFlipPicList = (msg, callback) ->
         catch error
               msg.reply "Sorry, I couldn't generate that meme. Unexpected response from memecaptain.com: #{body}"
         if result? and result['success']?
-              callback result.data.url, id, name
+              callback currentid, currentname, result.data.url 
         else
               msg.reply "Sorry, I couldn't generate that meme."
 
@@ -82,13 +85,15 @@ imgFlipPicList = (msg, callback) ->
         if result? 
             all_memes=""
             for meme in result.data.memes
+                currentid=meme.id
+                currentname=meme.name
                 msg.http("https://api.imgflip.com/caption_image").query(
                     template_id: meme.id,
                     text0: " ",
                     text1: " ",
                     username: username,
                     password: password 
-                ).get() showMeme, meme.id, meme.name
+                ).get() showMeme
         else
             msg.reply "Sorry, I can't understand their answer!" 
 
