@@ -82,7 +82,7 @@ imgFlipPicList = (msg) ->
             all_memes=""
             for meme in result.data.memes
                 msg.http("https://api.imgflip.com/caption_image").query(
-                    template_id: id,
+                    template_id: meme.id,
                     text0: " ",
                     text1: " ",
                     username: username,
