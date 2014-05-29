@@ -19,14 +19,17 @@ module.exports = (robot) ->
         imgFlipGen msg, msg.match[1], msg.match[2], msg.match[3], (url) ->
             msg.send url
     robot.respond /meme piclist/i, (msg) ->
-        imgFlipPicList msg, (id, name, url) -> 
+        imgFlipList msg, (url, id, name) -> 
             msg.send "#{id} #{name} #{url}"
     robot.respond /meme list/i, (msg) ->
-        imgFlipList msg
+        imgFlipList msg, (url, id, name) -> 
+            msg.send "#{id} #{name}"
+        
         
 imgFlipGen = (msg, id, top, bottom, callback) ->
 
-    showMeme = (err, res, body) ->
+    showMeme = (err, res, body ) ->
+        console.log(body)
         return msg.send err if err
         if res.statusCode == 301
               msg.http(res.headers.location).get() showMeme
@@ -38,10 +41,10 @@ imgFlipGen = (msg, id, top, bottom, callback) ->
               result = JSON.parse(body)
         catch error
               msg.reply "Sorry, I couldn't generate that meme. Unexpected response from memecaptain.com: #{body}"
-        if result? and result['success']?
-              callback result.data.url
+        if result? and result.success
+              callback result.data.url 
         else
-              msg.reply "Sorry, I couldn't generate that meme."
+              msg.reply "They say \"#{result.error_message}\" *rolleyes*"
 
     msg.http("https://api.imgflip.com/caption_image").query(
         template_id: id,
@@ -49,27 +52,9 @@ imgFlipGen = (msg, id, top, bottom, callback) ->
         text1: bottom,
         username: username,
         password: password 
-    ).get() processResult
+    ).get() showMeme
 
-imgFlipPicList = (msg, callback) ->
-
-    showMeme = (id, name) ->
-        return (err, res, body ) ->
-            return msg.send err if err
-            if res.statusCode == 301
-                  msg.http(res.headers.location).get() showMeme
-                  return
-            if res.statusCode > 300
-                  msg.reply "Sorry, I couldn't generate that meme. Unexpected status from memecaption.com: #{res.statusCode}"
-                  return
-            try
-                  result = JSON.parse(body)
-            catch error
-                  msg.reply "Sorry, I couldn't generate that meme. Unexpected response from memecaptain.com: #{body}"
-            if result? and result['success']?
-                  callback id, name, result.data.url 
-            else
-                  msg.reply "Sorry, I couldn't generate that meme."
+imgFlipList = (msg, callback) ->
 
     listMemes = (err, res, body) ->
         return msg.send err if err
@@ -83,36 +68,7 @@ imgFlipPicList = (msg, callback) ->
         if result? 
             all_memes=""
             for meme in result.data.memes
-                currentid=meme.id
-                currentname=meme.name
-                msg.http("https://api.imgflip.com/caption_image").query(
-                    template_id: meme.id,
-                    text0: " ",
-                    text1: " ",
-                    username: username,
-                    password: password 
-                ).get() showMeme(meme.id, meme.name)
-        else
-            msg.reply "Sorry, I can't understand their answer!" 
-
-    msg.http("https://api.imgflip.com/get_memes").get() listMemes
-
-
-imgFlipList = (msg) ->
-    listMemes = (err, res, body) ->
-        return msg.send err if err
-        if res.statusCode ==301
-            msg.http(res.headers.location).get() listMemes
-            return
-        try
-            result = JSON.parse(body)
-        catch error
-            msg.reply "Sorry, I can't understand their answer!" 
-        if result? 
-            all_memes=""
-            for meme in result.data.memes
-                all_memes = all_memes + "#{meme.id} #{meme.name}\n"
-            msg.reply all_memes
+                callback meme.url, meme.id, meme.name
         else
             msg.reply "Sorry, I can't understand their answer!" 
 
