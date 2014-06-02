@@ -1,15 +1,16 @@
 # Description:
-#   Get a meme from http://memecaptain.com/
+#   Get a meme from http://imgflip.com
 #
 # Dependencies:
 #   None
 #
 # Commands:
 #   hubot meme list
+#   hubot meme piclist - generate a list of all mem backgrounds
 #   hubot meme <id> #TOPTEXT# #BOTTOMTEXT#
 #
 # Author:
-#   bobanj
+#   PaulSmecker
 
 password = process.env.HUBOT_IMGFLIP_PASSWORD
 username = process.env.HUBOT_IMGFLIP_USERNAME
