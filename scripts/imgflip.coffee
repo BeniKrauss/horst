@@ -29,6 +29,11 @@ module.exports = (robot) ->
         
 imgFlipGen = (msg, id, top, bottom, callback) ->
 
+    if top == ""
+        top = " "
+    if bottom == ""
+        bottom = " "
+
     showMeme = (err, res, body ) ->
         console.log(body)
         return msg.send err if err
