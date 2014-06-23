@@ -16,7 +16,7 @@ password = process.env.HUBOT_IMGFLIP_PASSWORD
 username = process.env.HUBOT_IMGFLIP_USERNAME
 
 module.exports = (robot) ->
-    robot.respond /meme (\d+) #(.+)# #(.+)#/i, (msg) ->
+    robot.respond /meme (\d+) #(.*)# #(.*)#/i, (msg) ->
         imgFlipGen msg, msg.match[1], msg.match[2], msg.match[3], (url) ->
             msg.send url
     robot.respond /meme piclist/i, (msg) ->
