@@ -12,4 +12,4 @@
 
 module.exports = (robot) ->
     robot.respond /google (.*)/i, (msg) ->
-            msg.send "https://www.lmgtfy.com/?q=" + msg.match[1].replace(/\s+/g, "+")
+            msg.send "http://lmgtfy.com/?q=" + msg.match[1].replace(/\s+/g, "+")
